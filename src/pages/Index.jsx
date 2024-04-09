@@ -1,12 +1,22 @@
 import { useState } from "react";
-import { Box, Grid, GridItem, Text, Center } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Text, RadioGroup, Radio, FormControl, FormLabel, Button } from "@chakra-ui/react";
 
 const BOARD_SIZE = 8;
 
 const Index = () => {
-  const [board, setBoard] = useState(initializeBoard());
+  const [color, setColor] = useState("black");
+  const [opponentType, setOpponentType] = useState("human");
+  const [gameStarted, setGameStarted] = useState(false);
+  const [board, setBoard] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(1);
   const [gameOver, setGameOver] = useState(false);
+
+  function startGame() {
+    setBoard(initializeBoard());
+    setCurrentPlayer(color === "black" ? 1 : 2);
+    setGameOver(false);
+    setGameStarted(true);
+  }
 
   function initializeBoard() {
     const board = Array(BOARD_SIZE)
@@ -131,31 +141,60 @@ const Index = () => {
       <Text fontSize="2xl" mb={4}>
         Othello
       </Text>
-      <Grid templateColumns="repeat(8, 1fr)" gap={1} mb={4}>
-        {board.map((row, rowIdx) =>
-          row.map((cell, colIdx) => (
-            <GridItem
-              key={`${rowIdx}-${colIdx}`}
-              w="12"
-              h="12"
-              bg="green.500"
-              borderWidth={1}
-              borderColor="gray.400"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              cursor={isValidMove(rowIdx, colIdx, currentPlayer, board) ? "pointer" : "default"}
-              onClick={() => handleClick(rowIdx, colIdx)}
-              _hover={{
-                bg: isValidMove(rowIdx, colIdx, currentPlayer, board) ? "green.400" : "green.500",
-              }}
-            >
-              <Box w="80%" h="80%" rounded="full" bg={cell === 1 ? "black" : cell === 2 ? "white" : "transparent"} />
-            </GridItem>
-          )),
-        )}
-      </Grid>
-      <Text fontSize="xl">{gameOver ? (getWinner() > 0 ? `Player ${getWinner()} wins!` : "It's a tie!") : `Player ${currentPlayer}'s turn`}</Text>
+      {!gameStarted && (
+        <>
+          <FormControl mb={4}>
+            <FormLabel>Choose your color</FormLabel>
+            <RadioGroup value={color} onChange={setColor}>
+              <Radio value="black" mr={4}>
+                Black
+              </Radio>
+              <Radio value="white">White</Radio>
+            </RadioGroup>
+          </FormControl>
+          <FormControl mb={4}>
+            <FormLabel>Opponent</FormLabel>
+            <RadioGroup value={opponentType} onChange={setOpponentType}>
+              <Radio value="human" mr={4}>
+                Human
+              </Radio>
+              <Radio value="ai">AI</Radio>
+            </RadioGroup>
+          </FormControl>
+          <Button colorScheme="blue" onClick={startGame}>
+            Start Game
+          </Button>
+        </>
+      )}
+      {gameStarted && (
+        <>
+          <Grid templateColumns="repeat(8, 1fr)" gap={1} mb={4}>
+            {board.map((row, rowIdx) =>
+              row.map((cell, colIdx) => (
+                <GridItem
+                  key={`${rowIdx}-${colIdx}`}
+                  w="12"
+                  h="12"
+                  bg="green.500"
+                  borderWidth={1}
+                  borderColor="gray.400"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  cursor={isValidMove(rowIdx, colIdx, currentPlayer, board) ? "pointer" : "default"}
+                  onClick={() => handleClick(rowIdx, colIdx)}
+                  _hover={{
+                    bg: isValidMove(rowIdx, colIdx, currentPlayer, board) ? "green.400" : "green.500",
+                  }}
+                >
+                  <Box w="80%" h="80%" rounded="full" bg={cell === 1 ? "black" : cell === 2 ? "white" : "transparent"} />
+                </GridItem>
+              )),
+            )}
+          </Grid>
+          <Text fontSize="xl">{gameOver ? (getWinner() > 0 ? `Player ${getWinner()} wins!` : "It's a tie!") : `Player ${currentPlayer}'s turn`}</Text>
+        </>
+      )}
     </Box>
   );
 };
