@@ -1,12 +1,18 @@
 # clear-todos
 
-Implement a basic todo app with the following features:
-- A text input field for adding new todo items
-- A button to add the typed todo item to the list 
-- A list showing all current todo items
-- A button next to each todo item to mark it as completed
-- Completed items should be visually distinguished, e.g. by striking through the text
-- A button next to each todo item to remove it from the list
+Implement an Othello game with the following core functionality:
+
+- An 8x8 game board rendered with Chakra UI components 
+- Game pieces are black and white discs
+- Players take turns placing their color disc on the board
+- A disc played must capture at least one of the opponent's discs
+- Captured discs are flipped to the capturing player's color
+- Game ends when the board is full or neither player can capture any more discs
+- The player with the most discs on the board at the end wins
+- Display the current player's turn
+- Highlight valid moves on the board on hover
+
+Use state to track the 8x8 board, current player's turn, and if the game is over.
 
 ## Collaborate with GPT Engineer
 
